@@ -7,7 +7,6 @@ import {
   NavLink,
   useLocation,
 } from 'react-router-dom'
-
 import {
   AnimatePresence,
   MotionConfig,
@@ -20,7 +19,6 @@ import { SCROLL_VIDEO, IG_URL } from './data.js'
 import { Home, Shop, Product, NotFound } from './pages.jsx'
 import Admin from './admin/Admin.jsx'
 
-// پس‌زمینه متحرک سایت
 function Backdrop() {
   const { scrollYProgress } = useScroll()
   const rotate = useTransform(scrollYProgress, [0, 1], [-25, 155])
@@ -31,9 +29,7 @@ function Backdrop() {
 
     return scrollYProgress.on('change', (p) => {
       const v = video.current
-      if (v && v.duration) {
-        v.currentTime = v.duration * p
-      }
+      if (v && v.duration) v.currentTime = v.duration * p
     })
   }, [scrollYProgress])
 
@@ -67,13 +63,11 @@ function Backdrop() {
           </svg>
         </motion.div>
       )}
-
       <div className="shade" />
     </div>
   )
 }
 
-// سربرگ سایت
 function Header() {
   return (
     <header className="hd">
@@ -81,78 +75,6 @@ function Header() {
         <Link to="/" className="brand">
           <b>3</b> sport
         </Link>
-
-        <nav>
-
-import { useEffect, useRef } from 'react'
-import {
-  Routes,
-  Route,
-  Link,
-  NavLink,
-  useLocation,
-} from 'react-router-dom'
-
-import {
-  AnimatePresence,
-  MotionConfig,
-  motion,
-  useScroll,
-  useTransform,
-} from 'framer-motion'
-
-import { SCROLL_VIDEO, IG_URL } from './data.js'
-import { Home, Shop, Product, NotFound } from './pages.jsx'
-import Admin from './admin/Admin.jsx'
-
-function Backdrop() {
-  const { scrollYProgress } = useScroll()
-  const rotate = useTransform(scrollYProgress, [0, 1], [-25, 155])
-  const video = useRef(null)
-
-  useEffect(() => {
-    if (!SCROLL_VIDEO) return
-
-    return scrollYProgress.on('change', (p) => {
-      const v = video.current
-      if (v && v.duration) v.currentTime = v.duration * p
-    })
-  }, [scrollYProgress])
-
-  return (
-    <div className="bd" aria-hidden="true">
-      {SCROLL_VIDEO ? (
-        <video ref={video} src={SCROLL_VIDEO} muted playsInline preload="auto" />
-      ) : (
-        <motion.div className="track" style={{ rotate }}>
-          <svg viewBox="0 0 800 800">
-            {[380, 330, 280, 230, 180].map((r, i) => (
-              <ellipse
-                key={r}
-                cx="400"
-                cy="400"
-                rx={r}
-                ry={r * 0.62}
-                fill="none"
-                stroke="#d4ff00"
-                strokeWidth="2"
-                strokeDasharray={i % 2 ? '6 14' : 'none'}
-                opacity={1 - i * 0.16}
-              />
-            ))}
-          </svg>
-        </motion.div>
-      )}
-      <div className="shade" />
-    </div>
-  )
-}
-
-function Header() {
-  return (
-    <header className="hd">
-      <div className="wrap bar">
-        <Link to="/" className="brand"><b>3</b> sport</Link>
         <nav>
           <NavLink to="/" end>خانه</NavLink>
           <NavLink to="/shop">محصولات</NavLink>
@@ -176,9 +98,11 @@ export default function App() {
     year: 'numeric',
   })
 
+  const isAdmin = loc.pathname === '/admin'
+
   return (
     <MotionConfig reducedMotion="user">
-      {loc.pathname !== '/admin' && (
+      {!isAdmin && (
         <>
           <Backdrop />
           <Header />
@@ -195,7 +119,7 @@ export default function App() {
         </Routes>
       </AnimatePresence>
 
-      {loc.pathname !== '/admin' && (
+      {!isAdmin && (
         <footer className="ft">
           <div className="wrap">
             <span>3 sport، ساری، میدان ساعت</span>
@@ -203,28 +127,6 @@ export default function App() {
           </div>
         </footer>
       )}
-    </MotionConfig>
-  )
-}
-
-  <AnimatePresence mode="wait">
-        <Routes location={loc} key={loc.pathname}>
-          <Route path="/" element={<Home />} />
-
-          <Route path="/shop" element={<Shop />} />
-
-          <Route path="/product/:id" element={<Product />} />
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AnimatePresence>
-
-      <footer className="ft">
-        <div className="wrap">
-          <span>3 sport، ساری، میدان ساعت</span>
-          <span>© {year}</span>
-        </div>
-      </footer>
     </MotionConfig>
   )
 }
